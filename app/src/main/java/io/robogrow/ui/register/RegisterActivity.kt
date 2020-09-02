@@ -49,8 +49,13 @@ class RegisterActivity : AppCompatActivity() {
             if (registerState.usernameError != null) {
                 username.error = getString(registerState.usernameError)
             }
+
             if (registerState.passwordError != null) {
                 password.error = getString(registerState.passwordError)
+            }
+
+            if (registerState.passwordConfirmationError != null) {
+                password2.error = getString(registerState.passwordConfirmationError)
             }
         })
 
@@ -61,9 +66,11 @@ class RegisterActivity : AppCompatActivity() {
             if (registerResult.error != null) {
                 showRegisterFailed(registerResult.error)
             }
+
             if (registerResult.success != null) {
                 updateUiWithUser(registerResult.success)
             }
+
             setResult(Activity.RESULT_OK)
 
             //Complete and destroy register activity once successful
@@ -73,15 +80,25 @@ class RegisterActivity : AppCompatActivity() {
         username.afterTextChanged {
             registerViewModel.registerDataChanged(
                 username.text.toString(),
-                password.text.toString()
+                password.text.toString(),
+                password2.text.toString()
             )
         }
 
-        password.apply {
+        password.afterTextChanged {
+            registerViewModel.registerDataChanged(
+                username.text.toString(),
+                password.text.toString(),
+                password2.text.toString()
+            )
+        }
+
+        password2.apply {
             afterTextChanged {
                 registerViewModel.registerDataChanged(
                     username.text.toString(),
-                    password.text.toString()
+                    password.text.toString(),
+                    password2.text.toString()
                 )
             }
 
@@ -90,7 +107,8 @@ class RegisterActivity : AppCompatActivity() {
                     EditorInfo.IME_ACTION_DONE ->
                         registerViewModel.register(
                             username.text.toString(),
-                            password.text.toString()
+                            password.text.toString(),
+                            password2.text.toString()
                         )
                 }
                 false
@@ -106,7 +124,7 @@ class RegisterActivity : AppCompatActivity() {
 
             register.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                registerViewModel.register(username.text.toString(), password.text.toString())
+                registerViewModel.register(username.text.toString(), password.text.toString(),password2.text.toString())
             }
         }
     }
