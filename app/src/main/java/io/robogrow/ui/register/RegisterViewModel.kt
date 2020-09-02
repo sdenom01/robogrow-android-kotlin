@@ -17,9 +17,9 @@ class RegisterViewModel(private val registerRepository: RegisterRepository) : Vi
     private val _registerResult = MutableLiveData<RegisterResult>()
     val registerResult: LiveData<RegisterResult> = _registerResult
 
-    fun register(username: String, password: String) {
+    fun register(username: String, password: String, password2: String) {
         // can be launched in a separate asynchronous job
-        val result = registerRepository.register(username, password)
+        val result = registerRepository.register(username, password, password2)
 
         if (result is Result.Success) {
             _registerResult.value =
@@ -29,11 +29,13 @@ class RegisterViewModel(private val registerRepository: RegisterRepository) : Vi
         }
     }
 
-    fun registerDataChanged(username: String, password: String) {
+    fun registerDataChanged(username: String, password: String, password2: String) {
         if (!isUserNameValid(username)) {
             _registerForm.value = RegisterFormState(usernameError = R.string.invalid_username)
         } else if (!isPasswordValid(password)) {
             _registerForm.value = RegisterFormState(passwordError = R.string.invalid_password)
+        } else if(!doPasswordsMatch(password, password2)) {
+            _registerForm.value = RegisterFormState(passwordConfirmationError = R.string.invalid_password_confirmation)
         } else {
             _registerForm.value = RegisterFormState(isDataValid = true)
         }
@@ -51,5 +53,10 @@ class RegisterViewModel(private val registerRepository: RegisterRepository) : Vi
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
+    }
+
+    // A placeholder password validation check
+    private fun doPasswordsMatch(password: String, password2: String): Boolean {
+        return password == password2
     }
 }

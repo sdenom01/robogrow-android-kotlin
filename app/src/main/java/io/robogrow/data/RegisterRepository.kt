@@ -27,9 +27,9 @@ class RegisterRepository(val dataSource: RegisterDataSource) {
         dataSource.logout()
     }
 
-    fun register(username: String, password: String): Result<LoggedInUser> {
+    fun register(username: String, password: String, password2: String): Result<LoggedInUser> {
         // handle register
-        val result = dataSource.register(username, password)
+        val result = dataSource.register(username, password, password2)
 
         if (result is Result.Success) {
             setLoggedInUser(result.data)

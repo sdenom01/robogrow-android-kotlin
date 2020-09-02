@@ -8,7 +8,7 @@ import java.io.IOException
  */
 class RegisterDataSource {
 
-    fun register(username: String, password: String): Result<LoggedInUser> {
+    fun register(username: String, password: String, password2: String): Result<LoggedInUser> {
         try {
             // TODO: handle loggedInUser authentication
             val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "Jane Doe")
