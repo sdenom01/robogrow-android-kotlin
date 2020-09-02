@@ -27,6 +27,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_username"
+        android:theme="@style/RobogrowTextLayoutLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -36,8 +37,7 @@
         android:textColorHint="@color/roboHint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_sign_up"
-        app:hintTextAppearance="@style/RobogrowTextLayout">
+        app:layout_constraintTop_toBottomOf="@id/tv_sign_up">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_username"
@@ -51,6 +51,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_password"
+        android:theme="@style/RobogrowTextLayoutLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -60,8 +61,7 @@
         android:textColorHint="@color/roboHint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_layout_username"
-        app:hintTextAppearance="@style/RobogrowTextLayout">
+        app:layout_constraintTop_toBottomOf="@id/input_layout_username">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_password"
@@ -74,6 +74,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_password_2"
+        android:theme="@style/RobogrowTextLayoutLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -83,8 +84,7 @@
         android:textColorHint="@color/roboHint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_layout_password"
-        app:hintTextAppearance="@style/RobogrowTextLayout">
+        app:layout_constraintTop_toBottomOf="@id/input_layout_password">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_password_2"
@@ -109,7 +109,6 @@
         android:text="I agree to the Terms of Service and Privacy Policy."/>
 
     <Button
-        style="@style/Widget.MaterialComponents.Button"
         android:id="@+id/register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -118,7 +117,7 @@
         android:layout_marginStart="48dp"
         android:layout_marginEnd="48dp"
         android:enabled="false"
-        android:background="@color/colorAccent"
+        android:background="@drawable/robogrow_button_selector"
         android:textSize="16sp"
         android:padding="16dp"
         android:textColor="@android:color/white"
@@ -145,7 +144,6 @@
             android:layout_weight="2"
             android:textColor="@color/roboLight"
             android:text="Have an account?"/>
-
 
         <Button
             android:id="@+id/bt_sign_in"

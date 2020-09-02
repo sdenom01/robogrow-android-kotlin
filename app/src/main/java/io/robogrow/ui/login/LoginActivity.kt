@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -18,6 +19,7 @@ import android.widget.Toast
 
 import io.robogrow.R
 import io.robogrow.ui.register.RegisterActivity
+import kotlin.math.log
 
 class LoginActivity : AppCompatActivity() {
 
@@ -46,6 +48,7 @@ class LoginActivity : AppCompatActivity() {
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
             }
+
             if (loginState.passwordError != null) {
                 password.error = getString(loginState.passwordError)
             }
@@ -75,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         password.apply {
-            username.afterTextChanged {
+            password.afterTextChanged {
                 loginViewModel.loginDataChanged(
                     username.text.toString(),
                     password.text.toString()

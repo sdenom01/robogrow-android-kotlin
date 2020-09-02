@@ -3,6 +3,8 @@
     <color name="colorPrimary">#4CDC58</color>
     <color name="colorPrimaryDark">#272B30</color>
     <color name="colorAccent">#26A3C7</color>
+    <color name="colorAccentDark">#208aa7</color>
+    <color name="colorDisabled">#31383a</color>
 
     <color name="roboHint">#35424a</color>
     <color name="roboLight">#F5F5F7</color>

@@ -17,6 +17,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 
 import io.robogrow.R
+import io.robogrow.ui.login.LoginActivity
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -115,7 +116,7 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             signIn.setOnClickListener {
-                val intent = Intent(this@RegisterActivity, RegisterActivity::class.java).apply {
+                val intent = Intent(this@RegisterActivity, LoginActivity::class.java).apply {
 
                 }
 
