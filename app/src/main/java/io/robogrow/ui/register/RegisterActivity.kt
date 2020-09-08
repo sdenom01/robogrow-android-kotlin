@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import io.robogrow.MainActivity
 
 import io.robogrow.R
 import io.robogrow.ui.login.LoginActivity
@@ -109,7 +110,8 @@ class RegisterActivity : AppCompatActivity() {
                         registerViewModel.register(
                             username.text.toString(),
                             password.text.toString(),
-                            password2.text.toString()
+                            password2.text.toString(),
+                            this@RegisterActivity
                         )
                 }
                 false
@@ -125,7 +127,12 @@ class RegisterActivity : AppCompatActivity() {
 
             register.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                registerViewModel.register(username.text.toString(), password.text.toString(),password2.text.toString())
+                registerViewModel.register(
+                    username.text.toString(),
+                    password.text.toString(),
+                    password2.text.toString(),
+                    this@RegisterActivity
+                )
             }
         }
     }
@@ -133,6 +140,13 @@ class RegisterActivity : AppCompatActivity() {
     private fun updateUiWithUser(model: RegisteredUserView) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
+
+        val intent = Intent(this@RegisterActivity, MainActivity::class.java).apply {
+
+        }
+
+        startActivity(intent)
+
         // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,

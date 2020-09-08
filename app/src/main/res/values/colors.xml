@@ -5,6 +5,10 @@
     <color name="colorAccent">#26A3C7</color>
     <color name="colorAccentDark">#208aa7</color>
     <color name="colorDisabled">#31383a</color>
+    <color name="colorDisabledOther">#383e3f</color>
+
+    <color name="roboRed">#FF5555</color>
+    <color name="roboYellow">#D4D04C</color>
 
     <color name="roboHint">#35424a</color>
     <color name="roboLight">#F5F5F7</color>

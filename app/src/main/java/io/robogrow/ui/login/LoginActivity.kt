@@ -16,14 +16,23 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import io.robogrow.MainActivity
+
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import org.json.JSONObject
 
 import io.robogrow.R
+import io.robogrow.VolleySingleton
 import io.robogrow.ui.register.RegisterActivity
-import kotlin.math.log
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
+    private lateinit var email: String
+    private lateinit var pass: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +84,9 @@ class LoginActivity : AppCompatActivity() {
                 username.text.toString(),
                 password.text.toString()
             )
+
+            email = username.text.toString()
+            pass = password.text.toString()
         }
 
         password.apply {
@@ -112,14 +124,41 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
+        // Post parameters
+        // Form fields and values
+        val params = HashMap<String, String>()
+        params["email"] = email
+        params["password"] = pass
+        val jsonObject = JSONObject(params as Map<*, *>)
+
+        // Volley post request with parameters
+        val request = JsonObjectRequest(Request.Method.POST, "https://api.robogrow.io/authenticate", jsonObject,
+            Response.Listener { response ->
+                // Process the json
+                Log.d("RESPONSE", response.toString())
+
+                val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
+
+                }
+
+                startActivity(intent)
+
+            }, Response.ErrorListener {
+                // Error in request
+                Log.e("ERROR", it.toString())
+            })
+
+
+        // Volley request policy, only one time request to avoid duplicate transaction
+        request.retryPolicy = DefaultRetryPolicy(
+            DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+            // 0 means no retry
+            0, // DefaultRetryPolicy.DEFAULT_MAX_RETRIES = 2
+            1f // DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+
+        // Add the volley post request to the request queue
+        VolleySingleton.getInstance(this).addToRequestQueue(request)
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
