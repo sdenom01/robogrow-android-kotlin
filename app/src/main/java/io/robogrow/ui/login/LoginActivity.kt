@@ -25,6 +25,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import org.json.JSONObject
 
 import io.robogrow.R
+import io.robogrow.RobogrowApplication
 import io.robogrow.VolleySingleton
 import io.robogrow.ui.register.RegisterActivity
 
@@ -158,7 +159,7 @@ class LoginActivity : AppCompatActivity() {
         )
 
         // Add the volley post request to the request queue
-        VolleySingleton.getInstance(this).addToRequestQueue(request)
+        RobogrowApplication.queue.addToRequestQueue(request)
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
