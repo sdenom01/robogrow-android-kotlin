@@ -12,4 +12,5 @@ class RobogrowApplication : Application() {
         super.onCreate()
         queue = VolleySingleton.getInstance(this)
     }
+
 }
