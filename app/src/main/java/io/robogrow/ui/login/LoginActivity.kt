@@ -1,6 +1,7 @@
 package io.robogrow.ui.login
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -13,19 +14,18 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.*
-import com.android.volley.toolbox.HttpHeaderParser
-import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
 import io.robogrow.MainActivity
 import io.robogrow.R
-import io.robogrow.RobogrowApplication
+import io.robogrow.classes.AuthenticatedUser
 import io.robogrow.ui.register.RegisterActivity
-import org.json.JSONArray
+import io.robogrow.utils.AppUtils
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.UnsupportedEncodingException
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -34,6 +34,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var pass: String
 
     private lateinit var tvError: TextView
+    private lateinit var llWrapper: LinearLayout
+    private lateinit var pbLoading: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,9 +46,10 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.et_password)
         val login = findViewById<Button>(R.id.login)
         val signUp = findViewById<Button>(R.id.bt_sign_up)
-        val loading = findViewById<ProgressBar>(R.id.loading)
 
+        llWrapper = findViewById(R.id.ll_wrapper)
         tvError = findViewById(R.id.tv_login_error)
+        pbLoading = findViewById(R.id.loading)
 
         loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
@@ -69,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
+            pbLoading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
@@ -113,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
-                loading.visibility = View.VISIBLE
+                pbLoading.visibility = View.VISIBLE
 //                loginViewModel.login(username.text.toString(), password.text.toString())
                 loginUser(null)
             }
@@ -133,13 +136,13 @@ class LoginActivity : AppCompatActivity() {
             Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response)
-                    Log.d("SUCCESS", jsonObject.toString())
+
+                    // Create SharedPreferences object.
+                    AppUtils.saveUserToSharedPreferences(this, response)
 
                     val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
 
                     }
-
-
 
                     startActivity(intent)
                 } catch (e: JSONException) {
@@ -147,7 +150,17 @@ class LoginActivity : AppCompatActivity() {
                 }
             },
             Response.ErrorListener { error ->
-                Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show()
+                val errString = String(error.networkResponse.data)
+                val errors = JSONObject(errString).getJSONArray("errors")
+
+
+                tvError.visibility = View.VISIBLE
+                tvError.text = errors.getJSONObject(0).getString("msg")
+                Log.d(errString, errors.toString())
+
+                // Make the form and other components visible
+                llWrapper.visibility = View.VISIBLE
+                pbLoading.visibility = View.GONE
             }) {
             override fun getParams(): Map<String, String> {
                 val params: MutableMap<String, String> = HashMap()
@@ -159,6 +172,9 @@ class LoginActivity : AppCompatActivity() {
                 return params
             }
         }
+
+        // Make form and other components invisible
+        llWrapper.visibility = View.GONE
 
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
