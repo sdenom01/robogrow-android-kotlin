@@ -1,7 +1,6 @@
 package io.robogrow.ui.login
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -17,10 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
 import io.robogrow.MainActivity
 import io.robogrow.R
-import io.robogrow.classes.AuthenticatedUser
 import io.robogrow.ui.register.RegisterActivity
 import io.robogrow.utils.AppUtils
 import org.json.JSONException
@@ -42,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        val username = findViewById<EditText>(R.id.et_username)
+        val username = findViewById<EditText>(R.id.et_email)
         val password = findViewById<EditText>(R.id.et_password)
         val login = findViewById<Button>(R.id.login)
         val signUp = findViewById<Button>(R.id.bt_sign_up)
