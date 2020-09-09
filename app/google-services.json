@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "131699887816",
+    "firebase_url": "https://robogrow-android-kotlin.firebaseio.com",
+    "project_id": "robogrow-android-kotlin",
+    "storage_bucket": "robogrow-android-kotlin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131699887816:android:846354810692b108e19ffd",
+        "android_client_info": {
+          "package_name": "io.robogrow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131699887816-92sqqhgsv0vsbdvdne89gjfphr34iq8s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClNVJabXGgcP3Biti1-A6v8MthYNjLDcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131699887816-92sqqhgsv0vsbdvdne89gjfphr34iq8s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

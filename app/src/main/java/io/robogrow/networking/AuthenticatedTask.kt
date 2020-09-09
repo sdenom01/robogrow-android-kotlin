@@ -10,7 +10,7 @@ abstract class AuthenticatedTask<T>(t: T) {
     fun sendRequest(){
 
         jsonObjectRequest.headers
-        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
+//        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
     }
 
     fun receiveRequest(payload:String, type:Class<out T>) : T{

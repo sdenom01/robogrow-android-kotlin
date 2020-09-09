@@ -1,38 +1,41 @@
 package io.robogrow.ui.login
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
-import io.robogrow.MainActivity
-
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
+import android.widget.*
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
+import io.robogrow.MainActivity
+import io.robogrow.R
+import io.robogrow.classes.AuthenticatedUser
+import io.robogrow.ui.register.RegisterActivity
+import io.robogrow.utils.AppUtils
+import org.json.JSONException
 import org.json.JSONObject
 
-import io.robogrow.R
-import io.robogrow.VolleySingleton
-import io.robogrow.ui.register.RegisterActivity
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var email: String
     private lateinit var pass: String
+
+    private lateinit var tvError: TextView
+    private lateinit var llWrapper: LinearLayout
+    private lateinit var pbLoading: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +46,10 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.et_password)
         val login = findViewById<Button>(R.id.login)
         val signUp = findViewById<Button>(R.id.bt_sign_up)
-        val loading = findViewById<ProgressBar>(R.id.loading)
+
+        llWrapper = findViewById(R.id.ll_wrapper)
+        tvError = findViewById(R.id.tv_login_error)
+        pbLoading = findViewById(R.id.loading)
 
         loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
@@ -66,12 +72,12 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
+            pbLoading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
+                loginUser(loginResult.success)
             }
             setResult(Activity.RESULT_OK)
 
@@ -86,7 +92,6 @@ class LoginActivity : AppCompatActivity() {
             )
 
             email = username.text.toString()
-            pass = password.text.toString()
         }
 
         password.apply {
@@ -95,6 +100,8 @@ class LoginActivity : AppCompatActivity() {
                     username.text.toString(),
                     password.text.toString()
                 )
+
+                pass = password.text.toString()
             }
 
             setOnEditorActionListener { _, actionId, _ ->
@@ -109,8 +116,9 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                pbLoading.visibility = View.VISIBLE
+//                loginViewModel.login(username.text.toString(), password.text.toString())
+                loginUser(null)
             }
 
             signUp.setOnClickListener {
@@ -123,46 +131,76 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        // Post parameters
-        // Form fields and values
-        val params = HashMap<String, String>()
-        params["email"] = email
-        params["password"] = pass
-        val jsonObject = JSONObject(params as Map<*, *>)
-
-        // Volley post request with parameters
-        val request = JsonObjectRequest(Request.Method.POST, "https://api.robogrow.io/authenticate", jsonObject,
+    private fun loginUser(model: LoggedInUserView?) {
+        val stringRequest: StringRequest = object : StringRequest( Method.POST, "https://api.robogrow.io/authenticate",
             Response.Listener { response ->
-                // Process the json
-                Log.d("RESPONSE", response.toString())
+                try {
+                    val jsonObject = JSONObject(response)
 
-                val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
+                    // Create SharedPreferences object.
+                    AppUtils.saveUserToSharedPreferences(this, response)
 
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
+
+                    }
+
+                    startActivity(intent)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
                 }
-
-                startActivity(intent)
-
-            }, Response.ErrorListener {
-                // Error in request
-                Log.e("ERROR", it.toString())
-            })
+            },
+            Response.ErrorListener { error ->
+                val errString = String(error.networkResponse.data)
+                val errors = JSONObject(errString).getJSONArray("errors")
 
 
-        // Volley request policy, only one time request to avoid duplicate transaction
-        request.retryPolicy = DefaultRetryPolicy(
-            DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-            // 0 means no retry
-            0, // DefaultRetryPolicy.DEFAULT_MAX_RETRIES = 2
-            1f // DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
+                tvError.visibility = View.VISIBLE
+                tvError.text = errors.getJSONObject(0).getString("msg")
+                Log.d(errString, errors.toString())
 
-        // Add the volley post request to the request queue
-        VolleySingleton.getInstance(this).addToRequestQueue(request)
+                // Make the form and other components visible
+                llWrapper.visibility = View.VISIBLE
+                pbLoading.visibility = View.GONE
+            }) {
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+
+                params["email"] = email
+                params["password"] = pass
+
+                Log.d("PARAMS", params.toString())
+                return params
+            }
+        }
+
+        // Make form and other components invisible
+        llWrapper.visibility = View.GONE
+
+        val requestQueue = Volley.newRequestQueue(this)
+        requestQueue.add(stringRequest)
     }
+
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        Log.wtf("WTF", "WHY THE FUCK? PAUSE")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        Log.wtf("WTF", "WHY THE FUCK? DESTROY")
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        Log.wtf("WTF", "WHY THE FUCK? STOP")
     }
 }
 
