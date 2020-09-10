@@ -5,15 +5,18 @@ import com.android.volley.*
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
+import io.robogrow.utils.AppUtils
 import java.io.UnsupportedEncodingException
+import java.lang.reflect.Type
 import java.nio.charset.Charset
 
-class AuthenticatedGsonRequest<T>(
-    url:String,
-    method:Int,
-    private val type:Class<T>,
-    private val headers:MutableMap<String, String>?,
-    private val listener:Response.Listener<T>,
+open class AuthenticatedGsonRequest<T>(
+    url: String,
+    method: Int,
+    private val type: Class<T>,
+    private val headers: MutableMap<String, String>?,
+    private val listener: Response.Listener<T>,
     errorListener: Response.ErrorListener,
     private val context: Context
 ) : Request<T>(method, url, errorListener){
@@ -39,8 +42,9 @@ class AuthenticatedGsonRequest<T>(
                 response?.data ?: ByteArray(0),
                 Charset.forName(HttpHeaderParser.parseCharset(response?.headers))
             )
+
             Response.success(
-                gson.fromJson(json, type),
+                Gson().fromJson(json, type),
                 HttpHeaderParser.parseCacheHeaders(response)
             )
         } catch (e: UnsupportedEncodingException) {
@@ -50,6 +54,9 @@ class AuthenticatedGsonRequest<T>(
         }
     }
 
-    fun fetchApiKey() : String = context.getSharedPreferences()
-        .getString("x-api-token", null) ?: ""
+    inline fun <reified T> fromJson(json: String): T {
+        return Gson().fromJson(json, object: TypeToken<T>(){}.type)
+    }
+
+    fun fetchApiKey() : String = AppUtils.loadUserFromSharedPreferences(context).token
 }

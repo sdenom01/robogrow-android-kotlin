@@ -16,7 +16,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.VolleyError
+import io.robogrow.classes.User
 import io.robogrow.dummy.DummyContent
+import io.robogrow.networking.AuthenticatedErrorListener
+import io.robogrow.networking.AuthenticatedGsonRequest
+import io.robogrow.networking.grows.GetAllGrowsForUserId
 import io.robogrow.utils.AppUtils
 
 class MainActivity : AppCompatActivity(), GrowListFragment.OnListFragmentInteractionListener {
@@ -29,11 +36,30 @@ class MainActivity : AppCompatActivity(), GrowListFragment.OnListFragmentInterac
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        Toast.makeText(
+//        Toast.makeText(
+//            this,
+//            "HELLO " + AppUtils.loadUserFromSharedPreferences(this).user.username + " PULLED FROM SHARED!",
+//            Toast.LENGTH_SHORT
+//        ).show()
+
+        // Request all grows for authenticated user
+        var request = GetAllGrowsForUserId(
             this,
-            "HELLO " + AppUtils.loadUserFromSharedPreferences(this).user.username + " PULLED FROM SHARED!",
-            Toast.LENGTH_SHORT
-        ).show()
+            Response.Listener { response ->
+                if (response != null) {
+                    // Successfully got grows
+                    Log.w(
+                        "SUCCESS",
+                        "SUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESS" +
+                                "SUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCC" +
+                                "ESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESS"
+                    )
+                }
+            },
+            User::class.java
+        )
+
+        RobogrowApplication.queue.addToRequestQueue(request)
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -48,6 +74,7 @@ class MainActivity : AppCompatActivity(), GrowListFragment.OnListFragmentInterac
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
 //        // Inflate the menu; this adds items to the action bar if it is present.

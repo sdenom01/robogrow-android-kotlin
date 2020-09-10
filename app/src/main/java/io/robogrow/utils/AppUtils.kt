@@ -4,7 +4,11 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import io.robogrow.classes.AuthenticatedUser
+import io.robogrow.classes.User
+import java.sql.Date
+import java.time.LocalDateTime
 
 
 object AppUtils {
@@ -38,6 +42,20 @@ object AppUtils {
             sharedPreferences.getString(SHARED_PREFERENCES_KEY_USER_INFO_LIST, "")
 
         val gson = Gson()
-        return (gson.fromJson(userInfoListJsonString, AuthenticatedUser::class.java))
+
+        return try {
+            gson.fromJson(userInfoListJsonString, AuthenticatedUser::class.java)
+        } catch (e: JsonSyntaxException) {
+            AuthenticatedUser(User("", "", "", -1, java.util.Calendar.getInstance().time), "")
+        }
+    }
+
+    fun removeUserFromSharedPreferences(ctx: Context) {
+        val sharedPreferences = ctx.getSharedPreferences(
+            SHARED_PREFERENCES_FILE_USER_INFO_LIST,
+            MODE_PRIVATE
+        )
+
+        sharedPreferences.edit().remove(SHARED_PREFERENCES_KEY_USER_INFO_LIST)
     }
 }
