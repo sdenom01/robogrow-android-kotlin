@@ -212,6 +212,7 @@ class RegisterActivity : AppCompatActivity() {
                 params["password"] = pass
                 params["confirmPassword"] = pass2
                 params["type"] = "0"
+                
                 return params
             }
         }
