@@ -1,16 +1,15 @@
-package io.robogrow
+package io.robogrow.ui.growView
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import io.robogrow.R
 
 import kotlinx.android.synthetic.main.activity_grow_view.*
 
@@ -48,17 +47,29 @@ class GrowViewActivity : AppCompatActivity() {
         v1.setDrawFilled(true)
         v1.lineWidth = 3f
         v1.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)
-        v1.fillColor = ContextCompat.getColor(baseContext, R.color.colorPrimary)
-        v1.fillAlpha = ContextCompat.getColor(baseContext, R.color.colorPrimary)
-        v1.color = ContextCompat.getColor(baseContext, R.color.colorPrimary)
+        v1.fillColor = ContextCompat.getColor(baseContext,
+            R.color.colorPrimary
+        )
+        v1.fillAlpha = ContextCompat.getColor(baseContext,
+            R.color.colorPrimary
+        )
+        v1.color = ContextCompat.getColor(baseContext,
+            R.color.colorPrimary
+        )
         v1.setCircleColor(R.color.colorPrimary)
 
         v2.setDrawFilled(true)
         v2.lineWidth = 3f
         v2.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)
-        v2.fillColor = ContextCompat.getColor(baseContext, R.color.colorAccent)
-        v2.fillAlpha = ContextCompat.getColor(baseContext, R.color.colorAccent)
-        v2.color = ContextCompat.getColor(baseContext, R.color.colorAccent)
+        v2.fillColor = ContextCompat.getColor(baseContext,
+            R.color.colorAccent
+        )
+        v2.fillAlpha = ContextCompat.getColor(baseContext,
+            R.color.colorAccent
+        )
+        v2.color = ContextCompat.getColor(baseContext,
+            R.color.colorAccent
+        )
         v2.setCircleColor(R.color.colorAccent)
 
         lineChartTemp.data = LineData(v1, v2)
@@ -88,17 +99,29 @@ class GrowViewActivity : AppCompatActivity() {
         v3.setDrawFilled(true)
         v3.lineWidth = 3f
         v3.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)
-        v3.fillColor = ContextCompat.getColor(baseContext, R.color.roboRed)
-        v3.fillAlpha = ContextCompat.getColor(baseContext, R.color.roboRed)
-        v3.color = ContextCompat.getColor(baseContext, R.color.roboRed)
+        v3.fillColor = ContextCompat.getColor(baseContext,
+            R.color.roboRed
+        )
+        v3.fillAlpha = ContextCompat.getColor(baseContext,
+            R.color.roboRed
+        )
+        v3.color = ContextCompat.getColor(baseContext,
+            R.color.roboRed
+        )
         v3.setCircleColor(R.color.roboRed)
 
         v4.setDrawFilled(true)
         v4.lineWidth = 3f
         v4.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)
-        v4.fillColor = ContextCompat.getColor(baseContext, R.color.roboYellow)
-        v4.fillAlpha = ContextCompat.getColor(baseContext, R.color.roboYellow)
-        v4.color = ContextCompat.getColor(baseContext, R.color.roboYellow)
+        v4.fillColor = ContextCompat.getColor(baseContext,
+            R.color.roboYellow
+        )
+        v4.fillAlpha = ContextCompat.getColor(baseContext,
+            R.color.roboYellow
+        )
+        v4.color = ContextCompat.getColor(baseContext,
+            R.color.roboYellow
+        )
         v4.setCircleColor(R.color.roboYellow)
 
 

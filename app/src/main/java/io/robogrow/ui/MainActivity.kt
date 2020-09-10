@@ -1,4 +1,4 @@
-package io.robogrow
+package io.robogrow.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,12 +11,15 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Response
 import com.google.android.material.navigation.NavigationView
+import io.robogrow.ui.growView.GrowViewActivity
+import io.robogrow.R
+import io.robogrow.RobogrowApplication
 import io.robogrow.classes.User
 import io.robogrow.dummy.DummyContent
 import io.robogrow.networking.grows.GetAllGrowsForUserId
+import io.robogrow.ui.growList.GrowListFragment
 
 
 class MainActivity : AppCompatActivity(), GrowListFragment.OnListFragmentInteractionListener {
@@ -61,7 +64,9 @@ class MainActivity : AppCompatActivity(), GrowListFragment.OnListFragmentInterac
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_settings
+                R.id.nav_home,
+                R.id.nav_gallery,
+                R.id.nav_settings
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

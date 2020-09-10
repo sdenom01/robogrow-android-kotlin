@@ -1,4 +1,4 @@
-package io.robogrow
+package io.robogrow.ui.growList
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import io.robogrow.R
 
 
-import io.robogrow.GrowListFragment.OnListFragmentInteractionListener
+import io.robogrow.ui.growList.GrowListFragment.OnListFragmentInteractionListener
 import io.robogrow.dummy.DummyContent.DummyItem
 
 import kotlinx.android.synthetic.main.fragment_grow_item.view.*
@@ -50,7 +51,9 @@ class GrowRecyclerViewAdapter(
 //        holder.mContentView.text = item.content
 
         if (everyOther % 2 == 0) {
-            holder.mWrapper.setBackgroundColor(ContextCompat.getColor(holder.mWrapper.context, R.color.colorDisabledOther))
+            holder.mWrapper.setBackgroundColor(ContextCompat.getColor(holder.mWrapper.context,
+                R.color.colorDisabledOther
+            ))
         }
 
         everyOther++

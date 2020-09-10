@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import io.robogrow.MainActivity
+import io.robogrow.ui.MainActivity
 import io.robogrow.R
 import io.robogrow.ui.register.RegisterActivity
 import io.robogrow.utils.AppUtils

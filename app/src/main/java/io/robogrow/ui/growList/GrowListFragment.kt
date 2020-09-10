@@ -1,4 +1,4 @@
-package io.robogrow
+package io.robogrow.ui.growList
 
 import android.content.Context
 import android.os.Bundle
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.robogrow.R
 
 import io.robogrow.dummy.DummyContent
 import io.robogrow.dummy.DummyContent.DummyItem
@@ -46,7 +47,10 @@ class GrowListFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = GrowRecyclerViewAdapter(DummyContent.ITEMS, listener)
+                adapter = GrowRecyclerViewAdapter(
+                    DummyContent.ITEMS,
+                    listener
+                )
             }
         }
         return view

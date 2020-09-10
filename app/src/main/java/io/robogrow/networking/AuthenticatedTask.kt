@@ -3,7 +3,6 @@ package io.robogrow.networking
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import io.robogrow.VolleySingleton
 
 abstract class AuthenticatedTask<T>(t: T) {
     abstract var jsonObjectRequest : JsonObjectRequest;

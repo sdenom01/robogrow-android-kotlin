@@ -15,7 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import io.robogrow.MainActivity
+import io.robogrow.ui.MainActivity
 
 import io.robogrow.R
 import io.robogrow.ui.login.LoginActivity

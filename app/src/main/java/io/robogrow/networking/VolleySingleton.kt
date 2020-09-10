@@ -1,4 +1,4 @@
-package io.robogrow
+package io.robogrow.networking
 
 import android.content.Context
 import com.android.volley.Request
@@ -11,7 +11,8 @@ class VolleySingleton constructor(context: Context) {
         private var INSTANCE: VolleySingleton? = null
         fun getInstance(context: Context) =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: VolleySingleton(context).also {
+                INSTANCE
+                    ?: VolleySingleton(context).also {
                     INSTANCE = it
                 }
             }
