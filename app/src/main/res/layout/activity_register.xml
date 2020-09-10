@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:background="@color/colorPrimaryDark"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -12,170 +11,170 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".ui.register.RegisterActivity">
 
-    <TextView
-        android:id="@+id/tv_sign_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:paddingTop="24dp"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="Sign Up"/>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_email"
-        android:theme="@style/RobogrowTextLayoutLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:hint="@string/prompt_email"
-        android:textColorHint="@color/roboHint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_sign_up">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:selectAllOnFocus="true" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_username"
-        android:theme="@style/RobogrowTextLayoutLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:hint="@string/prompt_username"
-        android:textColorHint="@color/roboHint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_layout_email">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:selectAllOnFocus="true" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_password"
-        android:theme="@style/RobogrowTextLayoutLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:hint="@string/prompt_password"
-        android:textColorHint="@color/roboHint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_layout_username">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_password_2"
-        android:theme="@style/RobogrowTextLayoutLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:hint="@string/prompt_password_2"
-        android:textColorHint="@color/roboHint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_layout_password">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_password_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <CheckBox
-        android:id="@+id/cb_privacy_policy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:textColor="@color/roboHint"
-        app:layout_constraintTop_toBottomOf="@id/input_layout_password_2"
-        android:text="I agree to the Terms of Service and Privacy Policy."/>
-
-    <Button
-        android:id="@+id/register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:enabled="false"
-        android:background="@drawable/robogrow_button_selector"
-        android:textSize="16sp"
-        android:padding="16dp"
-        android:textColor="@android:color/white"
-        android:text="@string/action_sign_in"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cb_privacy_policy"
-        app:layout_constraintVertical_bias="0.2" />
-
     <LinearLayout
+        android:id="@+id/ll_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:weightSum="2"
-        app:layout_constraintTop_toBottomOf="@+id/register">
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <Button
-            style="@style/Widget.AppCompat.Button.Borderless"
+        <TextView
+            android:id="@+id/tv_sign_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:textColor="@color/roboLight"
-            android:text="Have an account?"/>
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="48dp"
+            android:paddingTop="24dp"
+            android:text="Sign Up"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="48dp"
+            android:hint="@string/prompt_email"
+            android:textColorHint="@color/roboHint"
+            android:theme="@style/RobogrowTextLayoutLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:selectAllOnFocus="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="48dp"
+            android:hint="@string/prompt_username"
+            android:textColorHint="@color/roboHint"
+            android:theme="@style/RobogrowTextLayoutLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:selectAllOnFocus="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="48dp"
+            android:hint="@string/prompt_password"
+            android:textColorHint="@color/roboHint"
+            android:theme="@style/RobogrowTextLayoutLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:selectAllOnFocus="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_password_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="48dp"
+            android:hint="@string/prompt_password_2"
+            android:textColorHint="@color/roboHint"
+            android:theme="@style/RobogrowTextLayoutLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_password_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:selectAllOnFocus="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/cb_privacy_policy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="48dp"
+            android:text="I agree to the Terms of Service and Privacy Policy."
+            android:textColor="@color/roboHint" />
+
+        <TextView
+            android:id="@+id/tv_login_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:background="@color/roboRed"
+            android:visibility="gone"
+            android:padding="16dp" />
 
         <Button
-            android:id="@+id/bt_sign_in"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
+            android:id="@+id/register"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/action_sign_in"/>
+            android:layout_gravity="start"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="48dp"
+            android:background="@drawable/robogrow_button_selector"
+            android:enabled="false"
+            android:padding="16dp"
+            android:text="@string/action_sign_in"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="48dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Have an account?"
+                android:textColor="@color/roboLight" />
+
+            <Button
+                android:id="@+id/bt_sign_in"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/action_sign_in"
+                android:textColor="@color/colorPrimary" />
+        </LinearLayout>
     </LinearLayout>
 
     <ProgressBar
@@ -189,8 +188,7 @@
         android:layout_marginBottom="64dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/input_layout_password"
-        app:layout_constraintStart_toStartOf="@+id/input_layout_password"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

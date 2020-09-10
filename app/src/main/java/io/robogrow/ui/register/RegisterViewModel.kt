@@ -1,15 +1,10 @@
 package io.robogrow.ui.register
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import io.robogrow.data.RegisterRepository
 import io.robogrow.data.Result
 
@@ -23,7 +18,7 @@ class RegisterViewModel(private val registerRepository: RegisterRepository) : Vi
     private val _registerResult = MutableLiveData<RegisterResult>()
     val registerResult: LiveData<RegisterResult> = _registerResult
 
-    fun register(username: String, password: String, password2: String, context: Context) {
+    fun register(email: String, username: String, password: String, password2: String, context: Context) {
         // can be launched in a separate asynchronous job
         val result = registerRepository.register(username, password, password2)
 
@@ -35,8 +30,10 @@ class RegisterViewModel(private val registerRepository: RegisterRepository) : Vi
         }
     }
 
-    fun registerDataChanged(username: String, password: String, password2: String) {
-        if (!isUserNameValid(username)) {
+    fun registerDataChanged(email: String, username: String, password: String, password2: String) {
+        if (!isEmailValid(email)) {
+            _registerForm.value = RegisterFormState(usernameError = R.string.invalid_username)
+        } else if (!isUserNameValid(username)) {
             _registerForm.value = RegisterFormState(usernameError = R.string.invalid_username)
         } else if (!isPasswordValid(password)) {
             _registerForm.value = RegisterFormState(passwordError = R.string.invalid_password)
@@ -49,12 +46,17 @@ class RegisterViewModel(private val registerRepository: RegisterRepository) : Vi
     }
 
     // A placeholder username validation check
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
+    private fun isEmailValid(email: String): Boolean {
+        return if (email.contains('@')) {
+            Patterns.EMAIL_ADDRESS.matcher(email).matches()
         } else {
-            username.isNotBlank()
+            email.isNotBlank()
         }
+    }
+
+    // A placeholder username validation check
+    private fun isUserNameValid(username: String): Boolean {
+        return username.isNotBlank()
     }
 
     // A placeholder password validation check
