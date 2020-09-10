@@ -2,6 +2,7 @@ package io.robogrow.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -28,15 +29,17 @@ class SplashActivity : AppCompatActivity() {
 
         val spring = SpringForce()
         spring.finalPosition = 0f
-        spring.stiffness = SpringForce.STIFFNESS_VERY_LOW // optional, default is STIFFNESS_MEDIUM
-        spring.dampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY // optional, default is DAMPI
+        spring.stiffness = SpringForce.STIFFNESS_VERY_LOW
+        spring.dampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
 
-        springAnim.addEndListener(object : DynamicAnimation.OnAnimationEndListener {
-            override fun onAnimationEnd(animation: DynamicAnimation<out DynamicAnimation<*>>?, canceled: Boolean, value: Float, velocity: Float) {
-                val intent = Intent(this@SplashActivity, LoginActivity::class.java).apply {}
-                startActivity(intent)
-            }
-        })
+        springAnim.addEndListener { _, _, _, _ ->
+            Handler().postDelayed(
+                {
+                    val intent = Intent(this@SplashActivity, LoginActivity::class.java).apply {}
+                    startActivity(intent)
+                },500
+            )
+        }
 
         springAnim.spring = spring
         springAnim.start()
