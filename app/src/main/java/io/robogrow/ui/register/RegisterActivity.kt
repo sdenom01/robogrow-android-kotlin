@@ -78,24 +78,6 @@ class RegisterActivity : AppCompatActivity() {
             }
         })
 
-        registerViewModel.registerResult.observe(this@RegisterActivity, Observer {
-            val registerResult = it ?: return@Observer
-
-            pbLoading.visibility = View.GONE
-            if (registerResult.error != null) {
-                showRegisterFailed(registerResult.error)
-            }
-
-            if (registerResult.success != null) {
-                updateUiWithUser(registerResult.success)
-            }
-
-            setResult(Activity.RESULT_OK)
-
-            //Complete and destroy register activity once successful
-            finish()
-        })
-
         email.afterTextChanged {
             registerViewModel.registerDataChanged(
                 email.text.toString(),
@@ -183,9 +165,7 @@ class RegisterActivity : AppCompatActivity() {
                     // Create SharedPreferences object.
                     AppUtils.saveUserToSharedPreferences(this, response)
 
-                    val intent = Intent(this@RegisterActivity, MainActivity::class.java).apply {
-
-                    }
+                    val intent = Intent(this@RegisterActivity, MainActivity::class.java).apply {}
 
                     startActivity(intent)
                 } catch (e: JSONException) {
@@ -222,24 +202,6 @@ class RegisterActivity : AppCompatActivity() {
 
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-    }
-
-    private fun updateUiWithUser(model: RegisteredUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-
-        val intent = Intent(this@RegisterActivity, MainActivity::class.java).apply {
-
-        }
-
-        startActivity(intent)
-
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
     }
 
     private fun showRegisterFailed(@StringRes errorString: Int) {

@@ -66,22 +66,6 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
-            val loginResult = it ?: return@Observer
-
-            pbLoading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-            }
-            if (loginResult.success != null) {
-                loginUser(loginResult.success)
-            }
-            setResult(Activity.RESULT_OK)
-
-            //Complete and destroy login activity once successful
-            finish()
-        })
-
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
                 username.text.toString(),
@@ -137,9 +121,7 @@ class LoginActivity : AppCompatActivity() {
                     // Create SharedPreferences object.
                     AppUtils.saveUserToSharedPreferences(this, response)
 
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
-
-                    }
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {}
 
                     startActivity(intent)
                 } catch (e: JSONException) {
