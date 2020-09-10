@@ -1,7 +1,10 @@
 package io.robogrow.networking.grows
 
 import android.content.Context
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.RetryPolicy
 import io.robogrow.classes.User
 import io.robogrow.networking.AuthenticatedErrorListener
 import io.robogrow.networking.AuthenticatedGsonRequest
@@ -25,4 +28,12 @@ class GetAllGrowsForUserId<T : User>(
     listener,
     AuthenticatedErrorListener(context),
     context
-)
+) {
+    override fun setRetryPolicy(retryPolicy: RetryPolicy?): Request<*> {
+        return super.setRetryPolicy(DefaultRetryPolicy(
+            30000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ))
+    }
+}

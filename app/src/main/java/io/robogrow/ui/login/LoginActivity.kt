@@ -177,27 +177,8 @@ class LoginActivity : AppCompatActivity() {
         requestQueue.add(stringRequest)
     }
 
-
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        Log.wtf("WTF", "WHY THE FUCK? PAUSE")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        Log.wtf("WTF", "WHY THE FUCK? DESTROY")
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        Log.wtf("WTF", "WHY THE FUCK? STOP")
     }
 }
 

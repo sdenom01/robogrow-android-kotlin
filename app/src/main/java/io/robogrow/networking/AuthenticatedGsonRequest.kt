@@ -19,19 +19,14 @@ open class AuthenticatedGsonRequest<T>(
     private val listener: Response.Listener<T>,
     errorListener: Response.ErrorListener,
     private val context: Context
-) : Request<T>(method, url, errorListener){
+) : Request<T>(method, url, errorListener) {
     private val gson = Gson()
 
     override fun getHeaders(): MutableMap<String, String> {
-        var retHeaders : MutableMap<String, String>
+        var retHeaders: HashMap<String, String> = (headers?: hashMapOf()) as HashMap<String, String>
+        retHeaders["x-api-token"] = fetchApiKey()
 
-        if (headers != null) {
-            retHeaders = headers
-            retHeaders.put("x-api-token", fetchApiKey())
-        }
-        else retHeaders = super.getHeaders()
-
-        return retHeaders;
+        return retHeaders
     }
 
     override fun deliverResponse(response: T) = listener.onResponse(response)
@@ -51,12 +46,14 @@ open class AuthenticatedGsonRequest<T>(
             Response.error(ParseError(e))
         } catch (e: JsonSyntaxException) {
             Response.error(ParseError(e))
+        } catch(e: Exception) {
+            Response.error(ParseError(e))
         }
     }
 
     inline fun <reified T> fromJson(json: String): T {
-        return Gson().fromJson(json, object: TypeToken<T>(){}.type)
+        return Gson().fromJson(json, object : TypeToken<T>() {}.type)
     }
 
-    fun fetchApiKey() : String = AppUtils.loadUserFromSharedPreferences(context).token
+    fun fetchApiKey(): String = AppUtils.loadUserFromSharedPreferences(context).token
 }

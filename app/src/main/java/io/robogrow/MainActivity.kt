@@ -3,28 +3,21 @@ package io.robogrow
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import android.view.Menu
-import android.widget.Toast
-import com.android.volley.Request
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Response
-import com.android.volley.VolleyError
+import com.google.android.material.navigation.NavigationView
 import io.robogrow.classes.User
 import io.robogrow.dummy.DummyContent
-import io.robogrow.networking.AuthenticatedErrorListener
-import io.robogrow.networking.AuthenticatedGsonRequest
 import io.robogrow.networking.grows.GetAllGrowsForUserId
-import io.robogrow.utils.AppUtils
+
 
 class MainActivity : AppCompatActivity(), GrowListFragment.OnListFragmentInteractionListener {
 
