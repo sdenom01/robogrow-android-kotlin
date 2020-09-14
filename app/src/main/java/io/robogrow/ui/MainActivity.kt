@@ -11,15 +11,19 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.android.volley.Response
+import com.android.volley.*
+import com.android.volley.toolbox.JsonArrayRequest
 import com.google.android.material.navigation.NavigationView
-import io.robogrow.ui.growView.GrowViewActivity
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.robogrow.R
 import io.robogrow.RobogrowApplication
-import io.robogrow.classes.User
+import io.robogrow.classes.Grow
 import io.robogrow.dummy.DummyContent
-import io.robogrow.networking.grows.GetAllGrowsForUserId
+import io.robogrow.networking.AuthenticatedErrorListener
 import io.robogrow.ui.growList.GrowListFragment
+import io.robogrow.ui.growView.GrowViewActivity
+import io.robogrow.utils.AppUtils
 
 
 class MainActivity : AppCompatActivity(), GrowListFragment.OnListFragmentInteractionListener {
@@ -32,30 +36,48 @@ class MainActivity : AppCompatActivity(), GrowListFragment.OnListFragmentInterac
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-//        Toast.makeText(
-//            this,
-//            "HELLO " + AppUtils.loadUserFromSharedPreferences(this).user.username + " PULLED FROM SHARED!",
-//            Toast.LENGTH_SHORT
-//        ).show()
-
-        // Request all grows for authenticated user
-        var request = GetAllGrowsForUserId(
-            this,
+        TODO("This needs to be moved into a class that inherits JsonArrayRequest, something that returns a JSONArray and handles authorization")
+        val localJReq: JsonArrayRequest = object : JsonArrayRequest(
+            "https://api.robogrow.io/grows",
             Response.Listener { response ->
                 if (response != null) {
+
+                    val groupListType =
+                        object : TypeToken<ArrayList<Grow?>?>() {}.type
+                    var growList: ArrayList<Grow> =
+                        Gson().fromJson(response.toString(), groupListType)
+
+
                     // Successfully got grows
                     Log.w(
                         "SUCCESS",
-                        "SUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESS" +
-                                "SUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCC" +
-                                "ESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESSSUCCESS"
+                        "SUCCESS"
                     )
                 }
             },
-            User::class.java
-        )
+            AuthenticatedErrorListener(this@MainActivity)
+        ) {
+            //here before semicolon ; and use { }.
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                var retHeaders: HashMap<String, String> = hashMapOf()
+                retHeaders["x-api-token"] =
+                    AppUtils.loadUserFromSharedPreferences(this@MainActivity).token
+                return retHeaders
+            }
 
-        RobogrowApplication.queue.addToRequestQueue(request)
+            override fun setRetryPolicy(retryPolicy: RetryPolicy?): Request<*> {
+                return super.setRetryPolicy(
+                    DefaultRetryPolicy(
+                        30000,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+                    )
+                )
+            }
+        }
+
+        RobogrowApplication.queue.addToRequestQueue(localJReq)
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)

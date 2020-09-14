@@ -1,17 +1,20 @@
 package io.robogrow.networking
 
 import android.content.Context
-import com.android.volley.*
+import com.android.volley.NetworkResponse
+import com.android.volley.ParseError
+import com.android.volley.Request
+import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import io.robogrow.utils.AppUtils
+import io.robogrow.utils.Serializer
 import java.io.UnsupportedEncodingException
-import java.lang.reflect.Type
 import java.nio.charset.Charset
 
-open class AuthenticatedGsonRequest<T>(
+open class AuthenticatedJsonArrayRequest<T>(
     url: String,
     method: Int,
     private val type: Class<T>,
@@ -38,8 +41,10 @@ open class AuthenticatedGsonRequest<T>(
                 Charset.forName(HttpHeaderParser.parseCharset(response?.headers))
             )
 
+            val x : T = fromJson(json)
+
             Response.success(
-                Gson().fromJson(json, type),
+                x,
                 HttpHeaderParser.parseCacheHeaders(response)
             )
         } catch (e: UnsupportedEncodingException) {
@@ -50,6 +55,12 @@ open class AuthenticatedGsonRequest<T>(
             Response.error(ParseError(e))
         }
     }
+
+    private inline fun fromJson(json: String): T {
+        return Gson().fromJson<T>(json, object: TypeToken<T>() {}.type)
+    }
+
+//    inline fun <reified T> Gson.fromJson(json: String): T = fromJson<T>(json, object: TypeToken<T>() {}.type)
 
     private fun fetchApiKey(): String = AppUtils.loadUserFromSharedPreferences(context).token
 }
