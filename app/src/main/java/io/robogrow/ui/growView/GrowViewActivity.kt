@@ -2,139 +2,197 @@ package io.robogrow.ui.growView
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.*
+import com.android.volley.toolbox.JsonObjectRequest
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.google.gson.Gson
+import io.robogrow.classes.LightValueFormatter
 import io.robogrow.R
+import io.robogrow.RobogrowApplication
+import io.robogrow.classes.Grow
+import io.robogrow.classes.GrowEvent
+import io.robogrow.classes.TimeOfDayFormatter
+import io.robogrow.networking.AuthenticatedErrorListener
+import io.robogrow.utils.AppUtils
 
 import kotlinx.android.synthetic.main.activity_grow_view.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class GrowViewActivity : AppCompatActivity() {
+
+    lateinit var grow: Grow
+
+    private lateinit var lineChartTemp: LineChart
+    private lateinit var lineChartLight: LineChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_grow_view)
         setSupportActionBar(toolbar)
 
+        val tvTemp = findViewById<TextView>(R.id.tv_temp)
+        val tvHumidity = findViewById<TextView>(R.id.tv_humidity)
+        val tvInfrared = findViewById<TextView>(R.id.tv_infrared)
+        val tvLux = findViewById<TextView>(R.id.tv_lux)
+
+        val rvGrowEvents = findViewById<RecyclerView>(R.id.rv_events)
+
+        lineChartTemp = findViewById(R.id.linechart_temp)
+        lineChartLight = findViewById(R.id.linechart_light)
+
         val actionBar: ActionBar? = (this as? AppCompatActivity)?.supportActionBar
         actionBar?.title = intent.getStringExtra("title")
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val lineChartTemp: LineChart = findViewById(R.id.linechart_temp)
-        val lineChartLight: LineChart = findViewById(R.id.linechart_light)
+        var _id = intent.getStringExtra("id")
+
+        // TODO("This needs to be moved into a class that inherits JsonObjectRequest, something that returns a JSONObject and handles authorization")
+        val localJReq: JsonObjectRequest = object : JsonObjectRequest(
+            Method.GET,
+            "https://api.robogrow.io/grows/$_id",
+            null,
+            Response.Listener { response ->
+                if (response != null) {
+                    grow = Gson().fromJson(response.toString(), Grow::class.java)
+
+                    var current: GrowEvent = grow.events.get(grow.events.size - 1)
+
+                    // Set current values
+                    tvTemp.text = current.temp.toString() + "°"
+                    tvHumidity.text = current.humidity.toString() + "%"
+                    tvInfrared.text = current.infrared.toString()
+                    tvLux.text = current.lux.toString()
+
+                    // Create line chart DataSets
+                    fillGraphs(grow.events)
+
+                    var reducedEvents = ArrayList<GrowEvent>()
+                    // TODO("This is duplicated code and should at least be moved to a method")
+                    grow.events.forEachIndexed { index, it ->
+                        if (index % 10 == 0) {
+                            reducedEvents.add(it)
+                        }
+                    }
+
+                    with(rvGrowEvents) {
+                        layoutManager = LinearLayoutManager(context)
+                        adapter = GrowEventRecyclerViewAdapter(
+                            reducedEvents
+                        )
+                    }
+                }
+            },
+            AuthenticatedErrorListener(this@GrowViewActivity)
+        ) {
+            //here before semicolon ; and use { }.
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                var retHeaders: HashMap<String, String> = hashMapOf()
+                retHeaders["x-api-token"] =
+                    AppUtils.loadUserFromSharedPreferences(this@GrowViewActivity).token
+                return retHeaders
+            }
+
+            override fun setRetryPolicy(retryPolicy: RetryPolicy?): Request<*> {
+                return super.setRetryPolicy(
+                    DefaultRetryPolicy(
+                        30000,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+                    )
+                )
+            }
+        }
+
+        RobogrowApplication.queue.addToRequestQueue(localJReq)
+    }
+
+    fun fillGraphs(events: ArrayList<GrowEvent>) {
 
         val entries = ArrayList<Entry>()
         val entries2 = ArrayList<Entry>()
+        val entries3 = ArrayList<Entry>()
+        val entries4 = ArrayList<Entry>()
+        val dates = ArrayList<Date>()
 
-        entries.add(Entry(1f, 60f))
-        entries.add(Entry(2f, 62f))
-        entries.add(Entry(3f, 61f))
-        entries.add(Entry(4f, 65f))
-        entries.add(Entry(5f, 66f))
-        entries2.add(Entry(1f, 45f))
-        entries2.add(Entry(2f, 46f))
-        entries2.add(Entry(3f, 50f))
-        entries2.add(Entry(4f, 46f))
-        entries2.add(Entry(5f, 48f))
+        events.forEachIndexed { index, it ->
+            if (index % 10 == 0) {
+                entries.add(Entry(index.toFloat(), it.temp))
+                entries2.add(Entry(index.toFloat(), it.humidity))
+                entries3.add(Entry(index.toFloat(), (it.infrared / 1000)))
+                entries4.add(Entry(index.toFloat(), (it.lux / 1000)))
+
+                dates.add(it.createDate)
+            }
+        }
 
         val v1 = LineDataSet(entries, "Temperature")
         val v2 = LineDataSet(entries2, "Humidity")
-
-        v1.setDrawFilled(true)
-        v1.lineWidth = 3f
-        v1.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)
-        v1.fillColor = ContextCompat.getColor(baseContext,
-            R.color.colorPrimary
-        )
-        v1.fillAlpha = ContextCompat.getColor(baseContext,
-            R.color.colorPrimary
-        )
-        v1.color = ContextCompat.getColor(baseContext,
-            R.color.colorPrimary
-        )
-        v1.setCircleColor(R.color.colorPrimary)
-
-        v2.setDrawFilled(true)
-        v2.lineWidth = 3f
-        v2.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)
-        v2.fillColor = ContextCompat.getColor(baseContext,
-            R.color.colorAccent
-        )
-        v2.fillAlpha = ContextCompat.getColor(baseContext,
-            R.color.colorAccent
-        )
-        v2.color = ContextCompat.getColor(baseContext,
-            R.color.colorAccent
-        )
-        v2.setCircleColor(R.color.colorAccent)
-
-        lineChartTemp.data = LineData(v1, v2)
-        lineChartTemp.xAxis.labelRotationAngle = 0f
-        lineChartTemp.axisLeft.textColor = Color.WHITE
-        lineChartTemp.axisRight.textColor = Color.WHITE
-        lineChartTemp.xAxis.textColor = Color.WHITE
-        lineChartTemp.legend.isEnabled = false
-
-        val entries3 = ArrayList<Entry>()
-        val entries4 = ArrayList<Entry>()
-
-        entries3.add(Entry(1f, 6000f))
-        entries3.add(Entry(2f, 6222f))
-        entries3.add(Entry(3f, 6333f))
-        entries3.add(Entry(4f, 6555f))
-        entries3.add(Entry(5f, 6666f))
-        entries4.add(Entry(1f, 8000f))
-        entries4.add(Entry(2f, 14600f))
-        entries4.add(Entry(3f, 12000f))
-        entries4.add(Entry(4f, 10000f))
-        entries4.add(Entry(5f, 12000f))
-
         val v3 = LineDataSet(entries3, "Infrared")
         val v4 = LineDataSet(entries4, "Lux")
 
-        v3.setDrawFilled(true)
-        v3.lineWidth = 3f
-        v3.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)
-        v3.fillColor = ContextCompat.getColor(baseContext,
-            R.color.roboRed
-        )
-        v3.fillAlpha = ContextCompat.getColor(baseContext,
-            R.color.roboRed
-        )
-        v3.color = ContextCompat.getColor(baseContext,
-            R.color.roboRed
-        )
-        v3.setCircleColor(R.color.roboRed)
+        setupDataSet(v1, R.color.colorPrimary)
+        setupDataSet(v2, R.color.colorAccent)
+        setupDataSet(v3, R.color.roboRed)
+        setupDataSet(v4, R.color.roboYellow)
 
-        v4.setDrawFilled(true)
-        v4.lineWidth = 3f
-        v4.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)
-        v4.fillColor = ContextCompat.getColor(baseContext,
-            R.color.roboYellow
-        )
-        v4.fillAlpha = ContextCompat.getColor(baseContext,
-            R.color.roboYellow
-        )
-        v4.color = ContextCompat.getColor(baseContext,
-            R.color.roboYellow
-        )
-        v4.setCircleColor(R.color.roboYellow)
-
+        lineChartTemp.data = LineData(v1, v2)
+        lineChartTemp.xAxis.labelRotationAngle = 0f
+        lineChartTemp.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        lineChartTemp.axisLeft.setDrawLabels(false)
+        lineChartTemp.axisRight.textColor = Color.WHITE
+        lineChartTemp.xAxis.textColor = Color.WHITE
+        lineChartTemp.xAxis.valueFormatter = TimeOfDayFormatter(dates)
+        lineChartTemp.legend.isEnabled = false
+        lineChartTemp.description.text = "Temperature / Humidity"
+        lineChartTemp.description.textColor = android.R.color.white
 
         // Lazy reversal here to make yellow appear behind red
         lineChartLight.data = LineData(v4, v3)
         lineChartLight.xAxis.labelRotationAngle = 0f
-        lineChartLight.axisLeft.textColor = Color.WHITE
+        lineChartLight.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        lineChartLight.axisLeft.setDrawLabels(false)
         lineChartLight.axisRight.textColor = Color.WHITE
         lineChartLight.xAxis.textColor = Color.WHITE
+        lineChartLight.xAxis.valueFormatter = TimeOfDayFormatter(dates)
         lineChartLight.legend.isEnabled = false
+        lineChartLight.description.text = "Infrared / Lux"
+        lineChartLight.description.textColor = android.R.color.white
+        lineChartLight.axisRight.valueFormatter = LightValueFormatter()
 
         lineChartLight.invalidate()
         lineChartTemp.invalidate()
+    }
+
+    fun setupDataSet(set: LineDataSet, color: Int) {
+        set.setDrawFilled(true)
+        set.lineWidth = 3f
+        set.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)
+        set.fillColor = ContextCompat.getColor(
+            baseContext,
+            color
+        )
+        set.fillAlpha = ContextCompat.getColor(
+            baseContext,
+            color
+        )
+        set.color = ContextCompat.getColor(
+            baseContext,
+            color
+        )
+        set.setCircleColor(color)
     }
 
     override fun onSupportNavigateUp(): Boolean {

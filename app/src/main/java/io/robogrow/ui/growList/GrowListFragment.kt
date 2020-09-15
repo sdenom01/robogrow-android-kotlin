@@ -2,17 +2,22 @@ package io.robogrow.ui.growList
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import com.android.volley.*
+import com.android.volley.toolbox.JsonArrayRequest
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.robogrow.R
-
-import io.robogrow.dummy.DummyContent
-import io.robogrow.dummy.DummyContent.DummyItem
+import io.robogrow.RobogrowApplication
+import io.robogrow.classes.Grow
+import io.robogrow.networking.AuthenticatedErrorListener
+import io.robogrow.utils.AppUtils
 
 /**
  * A fragment representing a list of Items.
@@ -20,18 +25,10 @@ import io.robogrow.dummy.DummyContent.DummyItem
  * [GrowListFragment.OnListFragmentInteractionListener] interface.
  */
 class GrowListFragment : Fragment() {
-
-    // TODO: Customize parameters
-    private var columnCount = 1
-
     private var listener: OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
     }
 
     override fun onCreateView(
@@ -40,19 +37,56 @@ class GrowListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_grow_list, container, false)
 
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
+        val mContext = context
+
+        // TODO("This needs to be moved into a class that inherits JsonArrayRequest, something that returns a JSONArray and handles authorization")
+        val localJReq: JsonArrayRequest = object : JsonArrayRequest(
+            "https://api.robogrow.io/grows",
+            Response.Listener { response ->
+                if (response != null) {
+
+                    val groupListType =
+                        object : TypeToken<ArrayList<Grow?>?>() {}.type
+                    var growList: ArrayList<Grow> =
+                        Gson().fromJson(response.toString(), groupListType)
+
+                    // Set the adapter
+                    if (view is RecyclerView) {
+                        with(view) {
+                            layoutManager = LinearLayoutManager(context)
+                            adapter = GrowRecyclerViewAdapter(
+                                growList,
+                                listener
+                            )
+                        }
+                    }
                 }
-                adapter = GrowRecyclerViewAdapter(
-                    DummyContent.ITEMS,
-                    listener
+            },
+            AuthenticatedErrorListener(mContext!!)
+        ) {
+            //here before semicolon ; and use { }.
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                var retHeaders: HashMap<String, String> = hashMapOf()
+                retHeaders["x-api-token"] =
+                    AppUtils.loadUserFromSharedPreferences(mContext!!).token
+                return retHeaders
+            }
+
+            override fun setRetryPolicy(retryPolicy: RetryPolicy?): Request<*> {
+                return super.setRetryPolicy(
+                    DefaultRetryPolicy(
+                        30000,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+                    )
                 )
             }
         }
+
+        RobogrowApplication.queue.addToRequestQueue(localJReq)
+
+
         return view
     }
 
@@ -83,7 +117,7 @@ class GrowListFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyItem?)
+        fun onListFragmentInteraction(item: Grow?)
     }
 
     companion object {

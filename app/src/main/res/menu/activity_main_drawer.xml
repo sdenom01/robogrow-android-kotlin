@@ -20,10 +20,8 @@
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_menu_manage"
                 android:title="@string/menu_settings" />
-s
         </menu>
     </item>
-
 </menu>

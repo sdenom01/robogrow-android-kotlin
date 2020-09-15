@@ -8,4 +8,4 @@
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ui.growList.GrowListFragment"
-    tools:listitem="@layout/fragment_grow_item" />
+    tools:listitem="@layout/row_grow" />

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:weightSum="10">
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/roboLight"
+        android:layout_weight="2"
+        android:lines="1"
+        android:textSize="12sp"
+        android:ellipsize="end"
+        android:text="12:00 AM 01/01/01"/>
+
+    <TextView
+        android:id="@+id/tv_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="@color/colorPrimary"
+        android:layout_weight="2"
+        android:text="75°"/>
+
+    <TextView
+        android:id="@+id/tv_humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="@color/colorAccent"
+        android:layout_weight="2"
+        android:text="45%"/>
+
+    <TextView
+        android:id="@+id/tv_infrared"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="@color/roboYellow"
+        android:layout_weight="2"
+        android:text="12,000"/>
+
+    <TextView
+        android:id="@+id/tv_lux"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="@color/roboRed"
+        android:layout_weight="2"
+        android:text="8,200"/>
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package io.robogrow.networking
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.TimeoutError
@@ -16,23 +17,26 @@ class AuthenticatedErrorListener (val context: Context) : Response.ErrorListener
         if (e !is TimeoutError) {
             val errorCode = e?.networkResponse?.statusCode ?: 500
 
-            val errString = String(e?.networkResponse?.data!!)
-            val error: APIError = Gson().fromJson(errString, APIError::class.java)
+            try {
+                val errString = String(e?.networkResponse?.data!!)
+                val error: APIError = Gson().fromJson(errString, APIError::class.java)
 
-            Toast.makeText(context, error.error, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, error.error, Toast.LENGTH_LONG).show()
 
-            when (errorCode) {
-                401 -> forceLogout()
+                when (errorCode) {
+                    401 -> forceLogout()
+                }
+            } catch (e: KotlinNullPointerException) {
+                Log.e("NullPointer", e.cause.toString())
             }
         } else {
             // HANDLE TIMEOUT?
-
             Toast.makeText(context, "Request timed out!", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun forceLogout() {
-// We might need to do more here
+        // We might need to do more here
         AppUtils.removeUserFromSharedPreferences(context)
 
         val intent = Intent(context, LoginActivity::class.java).apply {}
