@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.row_grow.view.*
  * TODO: Replace the implementation with code for your data type.
  */
 class GrowRecyclerViewAdapter(
-    private val mValues: List<Grow>,
+    private val mValues: ArrayList<Grow?>?,
     private val mListener: OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<GrowRecyclerViewAdapter.ViewHolder>() {
 
@@ -47,36 +47,35 @@ class GrowRecyclerViewAdapter(
         return ViewHolder(view)
     }
 
-    fun normalizeData(mVal: Float, min:Float, max:Float) {
-
-    }
-
     @SuppressLint("NewApi")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
-        holder.tvName.text = item.name
+        val item = mValues?.get(position)
+        holder.tvName.text = item?.name
 
-        if (item.config != null) {
-            holder.tvTempMin.text = item.config.tempLow.toString() + "°"
-            holder.tvTempMax.text = item.config.tempHigh.toString() + "°"
-            holder.pbTemp.max = item.config.tempHigh.toInt()
-            holder.pbTemp.min = item.config.tempLow.toInt()
-            holder.pbTemp.progress = item.current.temp.toInt()
+        if (item?.config != null) {
+            holder.tvTempMin.text = item?.config?.tempLow.toString() + "°"
+            holder.tvTempMax.text = item?.config?.tempHigh.toString() + "°"
+            holder.pbTemp.max = item?.config?.tempHigh?.toInt()
+            holder.pbTemp.min = item?.config?.tempLow?.toInt()
+            holder.pbTemp.progress = item?.current?.temp?.toInt()
 
-            holder.tvHumidityMin.text = item.config.humidityLow.toString() + "%"
-            holder.tvHumidityMax.text = item.config.humidityHigh.toString() + "%"
-            holder.pbHumidity.max = item.config.humidityHigh.toInt()
-            holder.pbHumidity.min = item.config.humidityLow.toInt()
-            holder.pbHumidity.progress = item.current.humidity.toInt()
+            holder.tvHumidityMin.text = item?.config?.humidityLow.toString() + "%"
+            holder.tvHumidityMax.text = item?.config?.humidityHigh.toString() + "%"
+            holder.pbHumidity.max = item?.config?.humidityHigh?.toInt()
+            holder.pbHumidity.min = item?.config?.humidityLow?.toInt()
+            holder.pbHumidity.progress = item?.current?.humidity?.toInt()
         }
 
 
 //        holder.mContentView.text = item.content
 
         if (everyOther % 2 == 0) {
-            holder.mWrapper.setBackgroundColor(ContextCompat.getColor(holder.mWrapper.context,
-                R.color.colorDisabledOther
-            ))
+            holder.mWrapper.setBackgroundColor(
+                ContextCompat.getColor(
+                    holder.mWrapper.context,
+                    R.color.colorDisabledOther
+                )
+            )
         }
 
         everyOther++
@@ -87,7 +86,7 @@ class GrowRecyclerViewAdapter(
         }
     }
 
-    override fun getItemCount(): Int = mValues.size
+    override fun getItemCount(): Int = mValues?.size ?: 0
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mWrapper: LinearLayout = mView.ll_row_wrapper

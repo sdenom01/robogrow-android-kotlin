@@ -1,4 +1,4 @@
-package io.robogrow.networking
+package io.robogrow.requests
 
 import android.content.Context
 import com.android.volley.NetworkResponse
@@ -10,11 +10,10 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import io.robogrow.utils.AppUtils
-import io.robogrow.utils.Serializer
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
 
-open class AuthenticatedJsonArrayRequest<T>(
+open class AuthenticatedGsonListRequest<T>(
     url: String,
     method: Int,
     private val type: Class<T>,
@@ -40,6 +39,9 @@ open class AuthenticatedJsonArrayRequest<T>(
                 response?.data ?: ByteArray(0),
                 Charset.forName(HttpHeaderParser.parseCharset(response?.headers))
             )
+
+            val collectionType = object :
+                TypeToken<Collection<T?>?>() {}.type
 
             val x : T = fromJson(json)
 

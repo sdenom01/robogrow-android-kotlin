@@ -22,7 +22,8 @@ import io.robogrow.RobogrowApplication
 import io.robogrow.classes.Grow
 import io.robogrow.classes.GrowEvent
 import io.robogrow.classes.TimeOfDayFormatter
-import io.robogrow.networking.AuthenticatedErrorListener
+import io.robogrow.requests.AuthenticatedErrorListener
+import io.robogrow.requests.grows.GetGrowById
 import io.robogrow.utils.AppUtils
 
 import kotlinx.android.synthetic.main.activity_grow_view.*
@@ -58,65 +59,39 @@ class GrowViewActivity : AppCompatActivity() {
 
         var _id = intent.getStringExtra("id")
 
-        // TODO("This needs to be moved into a class that inherits JsonObjectRequest, something that returns a JSONObject and handles authorization")
-        val localJReq: JsonObjectRequest = object : JsonObjectRequest(
-            Method.GET,
-            "https://api.robogrow.io/grows/$_id",
-            null,
-            Response.Listener { response ->
-                if (response != null) {
-                    grow = Gson().fromJson(response.toString(), Grow::class.java)
+        val request = GetGrowById(_id, this@GrowViewActivity, Response.Listener {
+            grow = it!!
 
-                    var current: GrowEvent = grow.events.get(grow.events.size - 1)
+            var current: GrowEvent = grow.events[grow.events.size - 1]
 
-                    // Set current values
-                    tvTemp.text = current.temp.toString() + "°"
-                    tvHumidity.text = current.humidity.toString() + "%"
-                    tvInfrared.text = current.infrared.toString()
-                    tvLux.text = current.lux.toString()
+            // Set current values
+            tvTemp.text = current.temp.toString() + "°"
+            tvHumidity.text = current.humidity.toString() + "%"
+            tvInfrared.text = current.infrared.toString()
+            tvLux.text = current.lux.toString()
 
-                    // Create line chart DataSets
-                    fillGraphs(grow.events)
+            // Create line chart DataSets
+            fillGraphs(grow.events)
 
-                    var reducedEvents = ArrayList<GrowEvent>()
-                    // TODO("This is duplicated code and should at least be moved to a method")
-                    grow.events.forEachIndexed { index, it ->
-                        if (index % 10 == 0) {
-                            reducedEvents.add(it)
-                        }
-                    }
-
-                    with(rvGrowEvents) {
-                        layoutManager = LinearLayoutManager(context)
-                        adapter = GrowEventRecyclerViewAdapter(
-                            reducedEvents
-                        )
-                    }
+            var reducedEvents = ArrayList<GrowEvent>()
+            // TODO("This is duplicated code and should at least be moved to a method")
+            grow.events.forEachIndexed { index, it ->
+                if (index % 10 == 0) {
+                    reducedEvents.add(it)
                 }
-            },
-            AuthenticatedErrorListener(this@GrowViewActivity)
-        ) {
-            //here before semicolon ; and use { }.
-            @Throws(AuthFailureError::class)
-            override fun getHeaders(): Map<String, String> {
-                var retHeaders: HashMap<String, String> = hashMapOf()
-                retHeaders["x-api-token"] =
-                    AppUtils.loadUserFromSharedPreferences(this@GrowViewActivity).token
-                return retHeaders
             }
 
-            override fun setRetryPolicy(retryPolicy: RetryPolicy?): Request<*> {
-                return super.setRetryPolicy(
-                    DefaultRetryPolicy(
-                        30000,
-                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-                    )
+            with(rvGrowEvents) {
+                layoutManager = LinearLayoutManager(context)
+                adapter = GrowEventRecyclerViewAdapter(
+                    reducedEvents
                 )
             }
-        }
+        }, Response.ErrorListener {
 
-        RobogrowApplication.queue.addToRequestQueue(localJReq)
+        })
+
+        RobogrowApplication.queue.addToRequestQueue(request)
     }
 
     fun fillGraphs(events: ArrayList<GrowEvent>) {

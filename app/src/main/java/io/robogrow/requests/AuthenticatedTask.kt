@@ -1,4 +1,4 @@
-package io.robogrow.networking
+package io.robogrow.requests
 
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson

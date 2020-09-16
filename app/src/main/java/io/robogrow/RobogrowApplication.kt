@@ -1,7 +1,7 @@
 package io.robogrow
 
 import android.app.Application
-import io.robogrow.networking.VolleySingleton
+import io.robogrow.requests.VolleySingleton
 
 class RobogrowApplication : Application() {
 
