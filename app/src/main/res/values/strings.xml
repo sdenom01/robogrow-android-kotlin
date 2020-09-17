@@ -24,6 +24,6 @@
 
     <string name="menu_grows">Grows</string>
     <string name="menu_configs">Configurations</string>
-    <string name="menu_settings">Settings</string>
+    <string name="menu_logout">Log Out</string>
     <string name="title_activity_grow_view">GrowViewActivity</string>
 </resources>

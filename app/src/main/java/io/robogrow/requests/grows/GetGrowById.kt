@@ -9,8 +9,7 @@ import io.robogrow.requests.AuthenticatedJsonObjectRequest
 class GetGrowById(
     _id: String,
     context: Context,
-    listener: Response.Listener<Grow?>,
-    errorListener: Response.ErrorListener?
+    listener: Response.Listener<Grow?>
 ) :
     AuthenticatedJsonObjectRequest<Grow>(
         context,
@@ -18,6 +17,5 @@ class GetGrowById(
         "https://api.robogrow.io/grows/$_id",
         Grow::class.java,
         null,
-        listener,
-        errorListener
+        listener
     )

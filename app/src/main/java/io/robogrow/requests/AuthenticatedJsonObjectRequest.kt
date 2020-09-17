@@ -16,10 +16,9 @@ open class AuthenticatedJsonObjectRequest<T>(
     url: String?,
     private val clazz: Class<T>,
     jsonParams: T?,
-    private val listener: Response.Listener<T?>?,
-    errorListener: Response.ErrorListener?
+    private val listener: Response.Listener<T?>?
 ) :
-    JsonRequest<T>(method, url, jsonParams.toString(), listener, errorListener) {
+    JsonRequest<T>(method, url, jsonParams.toString(), listener, AuthenticatedErrorListener(context)) {
     @Throws(AuthFailureError::class)
     override fun getHeaders(): Map<String, String> {
         val headers: MutableMap<String, String> = HashMap()

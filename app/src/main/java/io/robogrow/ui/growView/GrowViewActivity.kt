@@ -59,7 +59,10 @@ class GrowViewActivity : AppCompatActivity() {
 
         var _id = intent.getStringExtra("id")
 
-        val request = GetGrowById(_id, this@GrowViewActivity, Response.Listener {
+        val request = GetGrowById(
+            _id,
+            this@GrowViewActivity,
+            Response.Listener {
             grow = it!!
 
             var current: GrowEvent = grow.events[grow.events.size - 1]
@@ -87,14 +90,12 @@ class GrowViewActivity : AppCompatActivity() {
                     reducedEvents
                 )
             }
-        }, Response.ErrorListener {
-
         })
 
         RobogrowApplication.queue.addToRequestQueue(request)
     }
 
-    fun fillGraphs(events: ArrayList<GrowEvent>) {
+    private fun fillGraphs(events: ArrayList<GrowEvent>) {
 
         val entries = ArrayList<Entry>()
         val entries2 = ArrayList<Entry>()
@@ -151,7 +152,7 @@ class GrowViewActivity : AppCompatActivity() {
         lineChartTemp.invalidate()
     }
 
-    fun setupDataSet(set: LineDataSet, color: Int) {
+    private fun setupDataSet(set: LineDataSet, color: Int) {
         set.setDrawFilled(true)
         set.lineWidth = 3f
         set.valueTextColor = ContextCompat.getColor(baseContext, android.R.color.white)

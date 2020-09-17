@@ -18,10 +18,9 @@ open class AuthenticatedJsonArrayRequest<T>(
     url: String?,
     private val clazz: Class<T>?,
     private val headers: MutableMap<String?, String?>?,
-    listener: Response.Listener<ArrayList<T?>?>?,
-    errorListener: Response.ErrorListener?
+    listener: Response.Listener<ArrayList<T?>?>?
 ) :
-    Request<ArrayList<T?>?>(method, url, errorListener) {
+    Request<ArrayList<T?>?>(method, url, AuthenticatedErrorListener(context)) {
     private val gson: Gson? = Gson()
     private val listener: Response.Listener<ArrayList<T?>?>? = listener
 

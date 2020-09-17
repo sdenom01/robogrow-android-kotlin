@@ -7,8 +7,7 @@ import io.robogrow.requests.AuthenticatedJsonArrayRequest
 
 class GetGrowAllGrowsForUserId(
     context: Context,
-    listener: Response.Listener<ArrayList<Grow?>?>,
-    errorListener: Response.ErrorListener?
+    listener: Response.Listener<ArrayList<Grow?>?>
 ) :
     AuthenticatedJsonArrayRequest<Grow>(
         context,
@@ -16,6 +15,5 @@ class GetGrowAllGrowsForUserId(
         "https://api.robogrow.io/grows",
         Grow::class.java,
         mutableMapOf(),
-        listener,
-        errorListener
+        listener
     )

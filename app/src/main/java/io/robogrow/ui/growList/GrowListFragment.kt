@@ -44,9 +44,6 @@ class GrowListFragment : Fragment() {
                         )
                     }
                 }
-            },
-            Response.ErrorListener {
-                // Stub
             })
 
         RobogrowApplication.queue.addToRequestQueue(request)
