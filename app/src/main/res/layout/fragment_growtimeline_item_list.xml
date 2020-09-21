@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.vipulasri.timelineview.TimelineView android:id="@+id/timeline"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    app:markerSize="2dp"
+    app:lineWidth="2dp"
+    app:startLineColor="@color/roboLight"
+    app:endLineColor="@color/roboLight"
+    app:linePadding="5dp"
+    layout_height="match_parent"
+    layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.growTimeline.GrowTimelineFragment"
+    tools:listitem="@layout/fragment_growtimeline_item"/>

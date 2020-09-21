@@ -15,6 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.growTimeline.GrowTimelineActivity"
+            android:label="@string/title_activity_grow_timeline"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -30,12 +34,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Design.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.Design.NoActionBar"></activity>
         <activity
             android:name=".ui.register.RegisterActivity"
             android:label="@string/title_activity_register"
@@ -44,12 +46,10 @@
             android:name=".ui.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ui.growView.GrowViewActivity"
             android:label="@string/title_activity_grow_view"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
-
 
 </manifest>
